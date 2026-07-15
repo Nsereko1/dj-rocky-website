@@ -82,7 +82,7 @@ export const metadata: Metadata = {
   
   // Open Graph (Facebook, LinkedIn, WhatsApp)
   openGraph: {
-    title: "DJ Rocky | Future Afro Pioneer | World-Class Entertainment",
+    title: "DJ Rocky | Future Afro Pioneer | World-Class Dj",
     description: "Experience the revolutionary Future Afro sound. DJ Rocky - Ugandan DJ, producer, and global entertainer. Book for your next event.",
     url: "https://www.djrockyworld.com",
     siteName: "DJ Rocky Official",
