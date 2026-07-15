@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  AVAILABLE
+  RESERVED   // <-- NEW: ticket is held but not paid yet
+  SOLD
+  USED
+}
+
+enum PaymentStatus {
+  RESERVED
+  PAID
+  CANCELLED
+}
+
+model Event {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  date        DateTime
+  venue       String
+  capacity    Int
+  createdAt   DateTime @default(now())
+  tickets     Ticket[]
+}
+
+model Ticket {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  ticketNo   String   @unique
+  eventId    String   @db.ObjectId
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  status         Status        @default(AVAILABLE)
+  paymentStatus  PaymentStatus? // null until reserved
+
+  purchaserName  String?
+  purchaserEmail String?
+  purchaserPhone String?
+
+  purchasedAt DateTime?
+  usedAt     DateTime?
+  createdAt  DateTime @default(now())
+}

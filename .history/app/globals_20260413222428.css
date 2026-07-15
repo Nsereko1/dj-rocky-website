@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ============================================
+   MOBILE TOUCH OPTIMIZATIONS
+   ============================================ */
+
+/* Remove tap highlight on all elements */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve touch targets for interactive elements */
+button, 
+[role="button"],
+a,
+input,
+select,
+textarea {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+}
+
+/* Prevent text selection on interactive elements */
+button,
+[role="button"] {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Apple recommended minimum tap target size */
+@media (max-width: 640px) {
+  button, 
+  [role="button"],
+  a,
+  .dropdown-item,
+  [class*="cursor-pointer"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Smooth scrolling for iOS momentum */
+html {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Fix for iOS input/button default styling */
+button,
+input,
+textarea,
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+/* Remove default focus outline and add custom one */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Fix for iOS fixed positioning with backdrop blur */
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .backdrop-blur-md,
+  [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Prevent pull-to-refresh on mobile */
+body {
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for 100vh issue on mobile browsers */
+.min-h-screen {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Utility classes for mobile */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+.select-none {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+/* Improve tap highlight for dark mode */
+@media (prefers-color-scheme: dark) {
+  * {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Fix for iOS Safari overflow issues */
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure modals and fixed elements work on iOS */
+.fixed,
+.sticky {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Better mobile button active states */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  [role="button"]:active,
+  a:active {
+    opacity: 0.7;
+    transition: opacity 0.1s ease;
+  }
+}
+
+/* Improve readability on mobile */
+@media (max-width: 640px) {
+  body {
+    font-size: 16px; /* Prevents iOS zoom on input focus */
+  }
+}
+
+/* Hide scrollbars but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  .safe-top {
+    padding-top: max(0px, env(safe-area-inset-top));
+  }
+  
+  .safe-bottom {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+  
+  .safe-left {
+    padding-left: max(0px, env(safe-area-inset-left));
+  }
+  
+  .safe-right {
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
+
+/* Fix for iOS momentum scrolling in containers */
+.scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Ensure backdrop blur works on iOS */
+@supports (-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px)) {
+  .backdrop-blur-md,
+  .backdrop-blur {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Mobile-specific fixes for dropdowns */
+@media (max-width: 640px) {
+  [class*="dropdown"],
+  [class*="menu"] {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Fix for sticky hover states on mobile */
+@media (hover: hover) {
+  .hover\:bg-gray-200:hover {
+    background-color: rgb(229 231 235);
+  }
+}
+
+@media (hover: none) {
+  .hover\:bg-gray-200:active {
+    background-color: rgb(229 231 235);
+  }
+}
+
+/* Prevent content shift when scrollbar appears/disappears */
+html {
+  overflow-x: hidden;
+  width: 100vw;
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+  
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents zoom on focus */
+  }
+}
+
+/* Reduce motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}
