@@ -123,7 +123,7 @@ export default function Navigation() {
                   </DropdownItem>
                   {/* Only Events remains – Admin & Verify moved to Events page */}
                   <DropdownItem onClick={() => navigateTo("events")} isActive={isActive("/events")}>
-                    Events
+                    Tickets
                   </DropdownItem>
                 </div>
               </div>

@@ -117,6 +117,20 @@ const nextConfig = {
       },
     ]
   },
+
+  // 🆕 Rewrites for Tickets (/tickets shows /events content)
+  async rewrites() {
+    return [
+      {
+        source: '/tickets',
+        destination: '/events',
+      },
+      {
+        source: '/tickets/:path*',
+        destination: '/events/:path*',
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig

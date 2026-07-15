@@ -41,7 +41,7 @@ export default async function EventsPage() {
                 href={`/events/${event.id}`}
                 className="bg-blue-600 text-white px-4 py-2 rounded inline-block mt-2"
               >
-                Buy Tickets
+                Tickets
               </Link>
             </div>
           ))
