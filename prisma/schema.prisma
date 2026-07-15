@@ -24,7 +24,9 @@ model Event {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String?
-  date        DateTime
+  date        DateTime   // keep for now (will be replaced)
+  startDate   DateTime?  // new
+  endDate     DateTime?  // new (optional)
   venue       String
   capacity    Int
   createdAt   DateTime @default(now())

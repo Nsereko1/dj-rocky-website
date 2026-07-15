@@ -18,7 +18,7 @@ const isSuper = isSuperAdmin(email)
     include: {
       tickets: true,
     },
-    orderBy: { date: 'asc' },
+    orderBy: { date: 'asc' }, // keeping original order
   })
 
   return (
@@ -45,21 +45,42 @@ const isSuper = isSuperAdmin(email)
             const reserved = event.tickets.filter(t => t.status === 'RESERVED').length
             const sold = event.tickets.filter(t => t.status === 'SOLD').length
 
+            // Build date display: startDate if exists, else date
+            let dateDisplay = ''
+            if (event.startDate) {
+              dateDisplay = new Date(event.startDate).toLocaleDateString()
+              if (event.endDate) {
+                dateDisplay += ' – ' + new Date(event.endDate).toLocaleDateString()
+              }
+            } else {
+              dateDisplay = new Date(event.date).toLocaleDateString()
+            }
+
             return (
               <div key={event.id} className="border dark:border-gray-700 rounded-lg p-4 hover:shadow transition">
                 <div className="flex justify-between items-start">
                   <div>
                     <h2 className="text-xl font-bold">{event.title}</h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {new Date(event.date).toLocaleDateString()} · {event.venue}
+                      {dateDisplay} · {event.venue}
                     </p>
                   </div>
-                  <Link
-                    href={`/admin/events/${event.id}`}
-                    className="bg-gray-800 dark:bg-gray-700 text-white px-4 py-2 rounded text-sm hover:bg-gray-700"
-                  >
-                    View Tickets
-                  </Link>
+                  <div className="flex gap-2">
+                    <Link
+                      href={`/admin/events/${event.id}`}
+                      className="bg-gray-800 dark:bg-gray-700 text-white px-4 py-2 rounded text-sm hover:bg-gray-700"
+                    >
+                      View Tickets
+                    </Link>
+                    {isSuper && (
+                      <Link
+                        href={`/admin/events/${event.id}/edit`}
+                        className="bg-yellow-600 text-white px-4 py-2 rounded text-sm hover:bg-yellow-700"
+                      >
+                        Edit
+                      </Link>
+                    )}
+                  </div>
                 </div>
                 <div className="flex gap-4 mt-2 text-sm">
                   <span>🟢 Available: {available}</span>

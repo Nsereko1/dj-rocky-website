@@ -37,8 +37,8 @@ export default function Footer() {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex flex-col gap-4">
 
-          {/* Newsletter – all items centered, compact, close together */}
-          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-center gap-y-2 gap-x-4 text-center sm:text-left">
+          {/* Newsletter – added items-center for mobile centering */}
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-center items-center gap-y-2 gap-x-4 text-center sm:text-left">
             <span className="font-bold text-gray-800 dark:text-white">
               🎵 Join the Future Afro Movement
             </span>
