@@ -3,8 +3,9 @@ import { getSession, isAnyAdmin, isSuperAdmin } from '@/app/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import DeleteButton from '@/app/components/DeleteButton'
+import CancelButton from '@/app/components/CancelButton'
 import { generateTicketNumber } from '@/app/lib/ticket-utils'
-import { Status } from '@prisma/client'  
+import { Status } from '@prisma/client'
 
 export default async function EventTicketsPage({
   params,
@@ -18,12 +19,10 @@ export default async function EventTicketsPage({
 
   const session = await getSession()
   if (!session || !session.user) redirect('/api/auth/signin')
-  
   const email = session.user.email
   if (!email) redirect('/api/auth/signin')
-  
   if (!isAnyAdmin(email)) redirect('/admin')
-  
+
   const isSuper = isSuperAdmin(email)
 
   let event = await prisma.event.findUnique({
@@ -35,7 +34,6 @@ export default async function EventTicketsPage({
   // Auto-fix ticket count
   if (!fixed && event.tickets.length < event.capacity) {
     const needed = event.capacity - event.tickets.length
-
     const ticketsToCreate: { ticketNo: string; eventId: string; status: Status }[] = []
     const usedNumbers = new Set(event.tickets.map((t) => t.ticketNo))
 
@@ -53,7 +51,7 @@ export default async function EventTicketsPage({
             ticketsToCreate.push({
               ticketNo,
               eventId: event.id,
-              status: Status.AVAILABLE,   // ✅ enum
+              status: Status.AVAILABLE,
             })
           }
         }
@@ -139,7 +137,25 @@ export default async function EventTicketsPage({
                 <td className="border p-2">{ticket.purchaserName || '—'}</td>
                 <td className="border p-2">{ticket.purchaserPhone || '—'}</td>
                 <td className="border p-2">
-                  {isSuper ? <DeleteButton ticketId={ticket.id} /> : <span className="text-gray-400 text-sm">—</span>}
+                  <div className="flex flex-wrap gap-2">
+                    {/* Verify button – only for RESERVED tickets */}
+                    {ticket.status === Status.RESERVED && (
+                      <form action="/api/tickets/mark-paid" method="POST">
+                        <input type="hidden" name="ticketId" value={ticket.id} />
+                        <button className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition whitespace-nowrap">
+                          ✅ Verify
+                        </button>
+                      </form>
+                    )}
+
+                    {/* Cancel button – only for RESERVED tickets */}
+                    {ticket.status === Status.RESERVED && (
+                      <CancelButton ticketId={ticket.id} />
+                    )}
+
+                    {/* Delete button – super admin only, all statuses */}
+                    {isSuper && <DeleteButton ticketId={ticket.id} />}
+                  </div>
                 </td>
               </tr>
             ))}
