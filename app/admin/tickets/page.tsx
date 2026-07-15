@@ -1,21 +1,23 @@
 import { prisma } from '@/app/lib/prisma'
-import { getSession, isAnyAdmin } from '@/app/lib/auth'
+import { getSession, isAnyAdmin, isSuperAdmin } from '@/app/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import CancelButton from '@/app/components/CancelButton'
+import DeleteButton from '@/app/components/DeleteButton'
+import { Status } from '@prisma/client'
 
 export default async function AdminTicketsPage() {
-    const session = await getSession()
-if (!session || !session.user) redirect('/api/auth/signin')
+  const session = await getSession()
+  if (!session || !session.user) redirect('/api/auth/signin')
+  const email = session.user.email
+  if (!email) redirect('/api/auth/signin')
+  if (!isAnyAdmin(email)) redirect('/')
 
-const email = session.user.email
-if (!email) redirect('/api/auth/signin')
-
-if (!isAnyAdmin(email)) redirect('/')
+  const isSuper = isSuperAdmin(email)
 
   const tickets = await prisma.ticket.findMany({
     where: {
-      status: { in: ['RESERVED', 'SOLD'] },
+      status: { in: [Status.RESERVED, Status.SOLD] },
     },
     include: { event: true },
     orderBy: { createdAt: 'desc' },
@@ -56,27 +58,38 @@ if (!isAnyAdmin(email)) redirect('/')
                   <td className="border p-2">{ticket.purchaserPhone || '—'}</td>
                   <td className="border p-2">{ticket.event.title}</td>
                   <td className="border p-2">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      ticket.status === 'RESERVED' ? 'bg-yellow-200 text-yellow-800' :
-                      ticket.status === 'SOLD' ? 'bg-green-200 text-green-800' :
-                      'bg-gray-200 text-gray-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        ticket.status === Status.RESERVED
+                          ? 'bg-yellow-200 text-yellow-800'
+                          : 'bg-green-200 text-green-800'
+                      }`}
+                    >
                       {ticket.status}
                     </span>
                   </td>
                   <td className="border p-2">
-                    {ticket.status === 'RESERVED' && (
-                      <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      {/* Verify: only for RESERVED tickets */}
+                      {ticket.status === Status.RESERVED && (
                         <form action="/api/tickets/mark-paid" method="POST">
                           <input type="hidden" name="ticketId" value={ticket.id} />
-                          <button className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700 transition">
-                            Mark Paid
+                          <button className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition whitespace-nowrap">
+                            ✅ Verify
                           </button>
                         </form>
+                      )}
+
+                      {/* Cancel: only for RESERVED tickets */}
+                      {ticket.status === Status.RESERVED && (
                         <CancelButton ticketId={ticket.id} />
-                      </div>
-                    )}
-                    {ticket.status === 'SOLD' && <span className="text-green-600 font-medium">✅ Paid</span>}
+                      )}
+
+                      {/* Delete: super admin only, any status */}
+                      {isSuper && (
+                        <DeleteButton ticketId={ticket.id} />
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
