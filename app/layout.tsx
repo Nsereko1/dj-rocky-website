@@ -253,7 +253,7 @@ export default function RootLayout({
             <Footer />
           </ModalProvider>
           <Analytics />
-          <CookieConsent />
+          
           <SpeedInsights />
         </SessionProviderWrapper>
       </body>
