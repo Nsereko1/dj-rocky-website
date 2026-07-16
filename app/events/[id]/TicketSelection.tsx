@@ -1,5 +1,3 @@
-// /Users/rocky/Documents/dj-rocky-website-main/app/events/[id]/TicketSelection.tsx
-
 'use client'
 
 import { useState } from 'react'
@@ -76,12 +74,14 @@ export default function TicketSelection({ eventId }: { eventId: string }) {
 
   return (
     <div className="max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6">Book Your Ticket</h2>
+      <h2 className="text-2xl font-bold text-center mb-6 text-gray-700 dark:text-gray-300">
+        Book Your Ticket
+      </h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
             Full Name
           </label>
           <input
@@ -90,13 +90,13 @@ export default function TicketSelection({ eventId }: { eventId: string }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 outline-none transition"
           />
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
             Email Address
           </label>
           <input
@@ -105,13 +105,13 @@ export default function TicketSelection({ eventId }: { eventId: string }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 outline-none transition"
           />
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
             Phone Number
           </label>
           <input
@@ -120,19 +120,19 @@ export default function TicketSelection({ eventId }: { eventId: string }) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 outline-none transition"
           />
         </div>
 
         {/* Ticket Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
             Ticket Type
           </label>
           <select
             value={ticketType}
             onChange={(e) => setTicketType(e.target.value)}
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 outline-none transition"
           >
             <option value="Standard">Standard - {formatUGX(ticketPrices.Standard)}</option>
             <option value="Group of 3">Group of 3 - {formatUGX(ticketPrices['Group of 3'])}</option>
@@ -142,13 +142,13 @@ export default function TicketSelection({ eventId }: { eventId: string }) {
 
         {/* Quantity */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
             Quantity
           </label>
           <select
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 outline-none transition"
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
               <option key={n} value={n}>{n}</option>
@@ -157,43 +157,55 @@ export default function TicketSelection({ eventId }: { eventId: string }) {
         </div>
 
         {/* Total Price */}
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center">
-            <span className="font-medium text-gray-700 dark:text-gray-300">Total:</span>
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <span className="font-medium text-gray-600 dark:text-gray-400">Total:</span>
+            <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">
               {formatUGX(totalPrice)}
             </span>
           </div>
         </div>
 
-        {/* Book Ticket Button with White Outline - stays white on hover */}
+        {/* Fixed Button - Darker and more visible in light mode */}
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-4 text-lg font-bold rounded-lg transition transform ${
-            loading
-              ? 'bg-gray-400 cursor-not-allowed text-white'
-              : 'bg-transparent text-white border-2 border-white hover:bg-white hover:text-white hover:shadow-lg hover:scale-[1.02]'
-          }`}
+          className={`
+            w-full py-4 text-base sm:text-lg font-bold rounded-lg transition-all duration-200
+            bg-gray-800 hover:bg-gray-900 active:bg-black
+            text-gray-400
+            border-2 border-gray-700 hover:border-gray-800
+            shadow-lg hover:shadow-xl
+            focus:outline-none focus:ring-4 focus:ring-gray-600 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
+            disabled:opacity-50 disabled:cursor-not-allowed
+            flex items-center justify-center gap-2
+          `}
         >
-          {loading ? 'Processing...' : '🎫 Book Ticket'}
+          {loading ? (
+            <>
+              <span className="inline-block animate-spin">⏳</span>
+              Processing...
+            </>
+          ) : (
+            '🎫 Book Ticket'
+          )}
         </button>
 
         {/* Error Message */}
         {error && (
-          <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-400 rounded-lg text-center">
+          <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 rounded-lg text-center">
             ❌ {error}
           </div>
         )}
 
         {/* Success Message */}
         {success && (
-          <div className="p-3 bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-400 rounded-lg text-center">
+          <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-700 text-green-700 dark:text-green-400 rounded-lg text-center">
             ✅ Ticket booked successfully! Redirecting...
           </div>
         )}
 
-        <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
+        <p className="text-xs text-gray-500 dark:text-gray-500 text-center mt-4">
           By continuing, you agree to our terms of use.
         </p>
       </form>
