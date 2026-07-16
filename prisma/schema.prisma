@@ -9,7 +9,7 @@ datasource db {
 
 enum Status {
   AVAILABLE
-  RESERVED   // <-- NEW: ticket is held but not paid yet
+  RESERVED
   SOLD
   USED
 }
@@ -24,13 +24,33 @@ model Event {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String?
-  date        DateTime   // keep for now (will be replaced)
-  startDate   DateTime?  // new
-  endDate     DateTime?  // new (optional)
+  image       String?
+  date        DateTime
+  startDate   DateTime?
+  endDate     DateTime?
   venue       String
   capacity    Int
   createdAt   DateTime @default(now())
+  
   tickets     Ticket[]
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique // Primary identifier
+  name      String?
+  phone     String?
+  
+  // User metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Last ticket activity
+  lastPurchaseAt DateTime?
+  totalTickets   Int      @default(0)
+  
+  // Relationships
+  tickets   Ticket[]
 }
 
 model Ticket {
@@ -39,14 +59,26 @@ model Ticket {
   eventId    String   @db.ObjectId
   event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
+  // User relationship
+  userId     String?  @db.ObjectId
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
   status         Status        @default(AVAILABLE)
   paymentStatus  PaymentStatus? // null until reserved
 
+  // Purchase details (kept for historical records)
   purchaserName  String?
   purchaserEmail String?
   purchaserPhone String?
 
-  purchasedAt DateTime?
-  usedAt     DateTime?
-  createdAt  DateTime @default(now())
+  // Verification and audit fields
+  verifiedBy   String?
+  verifiedAt   DateTime?
+  approvedBy   String?
+  approvedAt   DateTime?
+
+  purchasedAt  DateTime?
+  usedAt       DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt // ← FIXED: Added ? to make it optional
 }

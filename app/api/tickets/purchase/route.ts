@@ -14,14 +14,32 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Transaction to reserve the ticket
+    // Transaction to reserve the ticket and manage user
     const ticket = await prisma.$transaction(async (tx) => {
+      // 1. Find or create user
+      let user = await tx.user.findUnique({
+        where: { email: email },
+      })
+
+      if (!user) {
+        user = await tx.user.create({
+          data: {
+            email: email,
+            name: name,
+            phone: phone,
+            totalTickets: 0,
+          },
+        })
+      }
+
+      // 2. Find available ticket
       const available = await tx.ticket.findFirst({
         where: { eventId, status: Status.AVAILABLE },
         include: { event: true },
       })
       if (!available) throw new Error('No tickets available')
 
+      // 3. Reserve the ticket
       const updated = await tx.ticket.update({
         where: { id: available.id },
         data: {
@@ -31,9 +49,20 @@ export async function POST(req: Request) {
           purchaserEmail: email,
           purchaserPhone: phone,
           purchasedAt: new Date(),
+          userId: user.id, // Link to user
         },
         include: { event: true },
       })
+
+      // 4. Update user's ticket count and last purchase
+      await tx.user.update({
+        where: { id: user.id },
+        data: {
+          totalTickets: { increment: 1 },
+          lastPurchaseAt: new Date(),
+        },
+      })
+
       return updated
     })
 
@@ -42,7 +71,7 @@ export async function POST(req: Request) {
     // --- 1. Send reservation email to buyer ---
     await resend.emails.send({
       from: FROM_EMAIL,
-      replyTo: REPLY_TO,          // ✅ camelCase – accepted by Resend v3+
+      replyTo: REPLY_TO,
       to: email,
       subject: `🎫 Ticket Reserved: ${ticket.event.title}`,
       html: `
@@ -96,6 +125,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ticketNo: ticket.ticketNo, eventId: ticket.eventId })
   } catch (error) {
+    console.error('Purchase error:', error)
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 }

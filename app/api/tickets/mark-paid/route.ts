@@ -17,24 +17,76 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Missing ticket ID' }, { status: 400 })
   }
 
-  const ticket = await prisma.ticket.update({
-    where: { id: ticketId },
-    data: {
-      status: Status.SOLD,
-      paymentStatus: PaymentStatus.PAID,
-      purchasedAt: new Date(),
-    },
-    include: { event: true },
+  // Use transaction to update ticket and user
+  const result = await prisma.$transaction(async (tx) => {
+    // 1. Update ticket with verification info
+    const ticket = await tx.ticket.update({
+      where: { id: ticketId },
+      data: {
+        status: Status.SOLD,
+        paymentStatus: PaymentStatus.PAID,
+        purchasedAt: new Date(),
+        // Store who verified and when
+        verifiedBy: email,
+        verifiedAt: new Date(),
+        approvedBy: email,
+        approvedAt: new Date(),
+      },
+      include: { event: true },
+    })
+
+    // 2. If ticket has purchaser email, update the user
+    if (ticket.purchaserEmail) {
+      const user = await tx.user.findUnique({
+        where: { email: ticket.purchaserEmail },
+      })
+      
+      if (user) {
+        // Link user to ticket if not already linked
+        if (!ticket.userId) {
+          await tx.ticket.update({
+            where: { id: ticket.id },
+            data: { userId: user.id },
+          })
+        }
+        
+        // Update user's last purchase timestamp (if verification is after purchase)
+        // Only update if the user's lastPurchaseAt is null or older than this verification
+        if (!user.lastPurchaseAt || user.lastPurchaseAt < new Date()) {
+          await tx.user.update({
+            where: { id: user.id },
+            data: {
+              lastPurchaseAt: new Date(),
+              // totalTickets is already incremented during purchase, but just in case
+              totalTickets: { increment: 0 }, // No-op, already incremented
+            },
+          })
+        }
+      }
+    }
+
+    return ticket
   })
 
-  if (ticket.purchaserEmail) {
+  // Send confirmation email to buyer
+  if (result.purchaserEmail) {
     await resend.emails.send({
       from: FROM_EMAIL,
-      to: ticket.purchaserEmail,
-      subject: `✅ Ticket Confirmed: ${ticket.event.title}`,
-      html: `...`,
+      to: result.purchaserEmail,
+      subject: `✅ Ticket Confirmed: ${result.event.title}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #1a1a1a;">Your ticket is confirmed!</h2>
+          <p><strong>Event:</strong> ${result.event.title}</p>
+          <p><strong>Date:</strong> ${new Date(result.event.date).toLocaleString()}</p>
+          <p><strong>Ticket No:</strong> ${result.ticketNo}</p>
+          <p><strong>Verified by:</strong> ${email}</p>
+          <p>Thank you for your payment. We look forward to seeing you!</p>
+        </div>
+      `,
     })
   }
 
+  // Redirect back to the tickets page
   return NextResponse.redirect(new URL('/admin/tickets', req.url))
 }

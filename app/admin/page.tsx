@@ -32,6 +32,14 @@ const isSuper = isSuperAdmin(email)
             <p className="text-gray-600 dark:text-gray-400">View all events and their tickets. Verify payments, cancel or regenerate tickets.</p>
           </div>
         </Link>
+
+        {/* 🆕 Manage Users Card - for all admins */}
+        <Link href="/admin/users" className="block">
+          <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow p-6 hover:shadow-lg transition">
+            <h2 className="text-xl font-bold mb-2">👥 Manage Users</h2>
+            <p className="text-gray-600 dark:text-gray-400">View all registered users and their ticket history.</p>
+          </div>
+        </Link>
       </div>
     </div>
   )
