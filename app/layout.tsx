@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     default: "DJ Rocky | Future Afro Pioneer | Ugandan DJ & Producer",
     template: "%s | DJ Rocky",
   },
-  description: "DJ Rocky - Busuulwa Peter Nsereko, pioneering Future Afro sound. , producer, software engineer & entrepreneur. Book now for international events, festivals, and exclusive performances. New album 'Afro Evolution' out now.",
+  description: "DJ Rocky - Busuulwa Peter Nsereko,  Ugandn Dj & Record roducer, software engineer & entrepreneur. Book Now For events, festivals, and Exclusive Partnerships.",
   
   // Application metadata
   applicationName: "DJ Rocky Official",
@@ -82,8 +82,8 @@ export const metadata: Metadata = {
   
   // Open Graph (Facebook, LinkedIn, WhatsApp)
   openGraph: {
-    title: "DJ Rocky | Future Afro Pioneer | World-Class Dj",
-    description: "Experience the revolutionary Future Afro sound. DJ Rocky - Ugandan DJ, producer, and global entertainer. Book for your next event.",
+    title: "DJ Rocky | King of Future Afro  | Dj/Producer",
+    description: "DJ Rocky - Ugandan DJ/Record Producer, and Global Entertainer.",
     url: "https://www.djrockyworld.com",
     siteName: "DJ Rocky Official",
     images: [
@@ -106,7 +106,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "DJ Rocky | Future Afro Pioneer",
-    description: "Ugandan DJ & Producer. Future Afro sound. Book now for global events.",
+    description: "Ugandan DJ & Producer. Future Afro sound.",
     creator: "@djrockyug",
     site: "@djrockyug",
     images: [
