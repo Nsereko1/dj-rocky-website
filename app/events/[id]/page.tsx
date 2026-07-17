@@ -1,5 +1,6 @@
 import { prisma } from '@/app/lib/prisma'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import TicketSelector from './TicketSelector'
 
 export default async function EventDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -35,6 +36,30 @@ export default async function EventDetail({ params }: { params: Promise<{ id: st
 
       {/* Interactive part (client) */}
       <TicketSelector eventId={event.id} />
+
+      {/* Flyer - Below the ticket selector */}
+      {event.image && (
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden p-4">
+          <h3 className="text-xl font-bold mb-4 text-center">Event Flyer</h3>
+          <div className="relative w-full flex justify-center">
+            <Image
+              src={event.image}
+              alt={`${event.title} flyer - full view`}
+              width={600}
+              height={900}
+              className="object-contain w-auto h-auto max-h-[800px]"
+              priority
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Back button */}
+      <div className="mt-6">
+        <a href="/events" className="text-blue-600 hover:underline">
+          ← Back to Events
+        </a>
+      </div>
     </div>
   )
 }

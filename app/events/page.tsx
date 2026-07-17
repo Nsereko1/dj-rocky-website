@@ -66,7 +66,6 @@ export default async function EventsPage() {
         ) : (
           events.map((event) => (
             <div key={event.id} className="border rounded-lg shadow-lg overflow-hidden bg-white dark:bg-gray-800">
-              {/* Two-column layout: Flyer on right, Details on left */}
               <div className="flex flex-col md:flex-row">
                 {/* Left side - Event Details */}
                 <div className="flex-1 p-6 md:p-8">
@@ -87,26 +86,21 @@ export default async function EventsPage() {
                   </Link>
                 </div>
                 
-                {/* Right side - Flyer/Image */}
-                <div className="md:w-96 lg:w-[500px] relative min-h-[300px] md:min-h-full bg-gray-100 dark:bg-gray-700">
+                {/* Right side - Flyer with full size, no cropping */}
+                <div className="md:w-96 lg:w-[500px] relative bg-gray-100 dark:bg-gray-700 flex items-center justify-center p-4">
                   {event.image ? (
-                    <div className="relative w-full h-full min-h-[300px] md:min-h-[400px] cursor-pointer group">
+                    <div className="relative w-full h-auto max-h-[600px]">
                       <Image
                         src={event.image}
                         alt={`${event.title} flyer`}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-300"
+                        width={800}
+                        height={1200}
+                        className="object-contain w-full h-auto max-h-[600px]"
                         priority
                       />
-                      {/* Overlay with "View Full Size" text */}
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-                        <span className="text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 px-4 py-2 rounded-full">
-                          Click to view full size
-                        </span>
-                      </div>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center h-full min-h-[300px] text-gray-400 dark:text-gray-500">
+                    <div className="flex items-center justify-center h-64 text-gray-400 dark:text-gray-500">
                       <div className="text-center">
                         <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
