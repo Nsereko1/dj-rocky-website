@@ -3,17 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  "dev": "next dev",
-  "build": "prisma generate && next build",
-  "start": "next start",
-  "lint": "eslint",
-  "postinstall": "prisma generate"
-},
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "postinstall": "prisma generate"
+  },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
     "@prisma/client": "^6.19.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "mongodb": "^7.5.0",
     "next": "16.2.3",
     "next-auth": "^4.24.14",
     "next-umami": "^1.0.0",
